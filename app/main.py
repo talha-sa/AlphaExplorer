@@ -18,9 +18,11 @@ st.set_page_config(
 st.markdown("""
 <style>
     /* Hide auto-detected pages completely */
-    section[data-testid="stSidebarNav"] {display: none !important;}
-    div[data-testid="stSidebarNavItems"] {display: none !important;}
-
+   section[data-testid="stSidebarNav"] {display: none !important;}
+div[data-testid="stSidebarNavItems"] {display: none !important;}
+ul[data-testid="stSidebarNavItems"] {display: none !important;}
+[data-testid="stSidebarNav"] {display: none !important;}
+.st-emotion-cache-pbsa4j {display: none !important;}
     /* Sidebar gradient */
     [data-testid="stSidebar"] {
         background: linear-gradient(160deg,
