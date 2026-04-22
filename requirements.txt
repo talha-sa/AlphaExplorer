@@ -5,3 +5,4 @@ requests
 biopython
 py3Dmol
 stmol
+streamlit-molstar
