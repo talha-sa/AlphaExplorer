@@ -30,7 +30,11 @@ def show():
         return
 
     with st.spinner("Searching..."):
-        results = search_uniprot(query, limit=5)
+        results, error = search_uniprot(query, limit=5)
+
+    if error:
+        st.error(error)
+        return
 
     if not results:
         st.error("No proteins found. Try a different search term.")
@@ -54,7 +58,10 @@ def show():
     uniprot_id = results[selected_idx]["primaryAccession"]
 
     with st.spinner("Loading protein details..."):
-        data = get_uniprot_details(uniprot_id)
+        data, error = get_uniprot_details(uniprot_id)
+        if error:
+            st.error(error)
+            return
         info = extract_protein_info(data)
 
     if not info:
@@ -101,11 +108,13 @@ def show():
     st.markdown("### 🧬 Gene Ontology (GO) Terms")
     if data:
         go_terms = []
-        for ref in data.get("dbReferences", []):
-            if ref.get("type") == "GO":
+        for ref in data.get("uniProtKBCrossReferences", []):
+            if ref.get("database") == "GO":
                 try:
-                    term = ref["properties"]["term"]
-                    go_terms.append(term)
+                    props = ref.get("properties", [])
+                    for prop in props:
+                        if prop.get("key") == "GoTerm":
+                            go_terms.append(prop.get("value", ""))
                 except:
                     pass
 
