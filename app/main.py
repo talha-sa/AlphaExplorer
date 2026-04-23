@@ -202,6 +202,20 @@ st.markdown("""
             inp.setAttribute('autocorrect', 'off');
             inp.setAttribute('autocapitalize', 'none');
             inp.setAttribute('spellcheck', 'false');
+
+            // Force styles directly on the element (inline = highest specificity)
+            function applyStyles() {
+                inp.style.setProperty('background', 'rgba(255,255,255,0.18)', 'important');
+                inp.style.setProperty('color', 'white', 'important');
+                inp.style.setProperty('-webkit-text-fill-color', 'white', 'important');
+                inp.style.setProperty('caret-color', 'white', 'important');
+                inp.style.setProperty('box-shadow', 'none', 'important');
+            }
+            applyStyles();
+            inp.addEventListener('focus',  applyStyles);
+            inp.addEventListener('blur',   applyStyles);
+            inp.addEventListener('input',  applyStyles);
+            inp.addEventListener('click',  applyStyles);
         });
     }
     var observer = new MutationObserver(disableAutocomplete);
