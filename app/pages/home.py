@@ -1,4 +1,4 @@
-# AlphaExplorer - Explorer Home (Cinematic Bento Grid)
+# AlphaExplorer - Home Page
 
 import streamlit as st
 
@@ -6,341 +6,259 @@ def show():
     uid  = st.session_state.get("uniprot_id")
     info = st.session_state.get("protein_info", {})
 
-    # ── Hero Header ───────────────────────────────────────────
+    # ── Hero ────────────────────────────────────────────────────
     st.markdown("""
-    <div style="padding: 40px 0 20px 0; text-align:left;">
-        <h1 style="
-            font-family:'Space Grotesk',sans-serif;
-            font-size:48px;
-            font-weight:600;
-            letter-spacing:-0.02em;
-            color:#ffffff;
-            margin:0;
-            line-height:1.1;
-        ">Unlocking the
-        <span style="
-            background:linear-gradient(90deg,#667eea,#f64f59);
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-        "> Proteome</span></h1>
-        <p style="
-            font-family:'Inter',sans-serif;
-            font-size:16px;
-            color:rgba(197,197,213,0.6);
-            margin:12px 0 0 0;
-            max-width:600px;
-        ">Real-time structural analysis and drug discovery powered
-        by hyper-precision genomic intelligence.</p>
+    <div style='padding:10px 0 24px 0;'>
+        <h1 style='font-size:42px; font-weight:800;
+                   color:#1A1A2E; margin:0; line-height:1.2;'>
+            🧬 AlphaExplorer
+        </h1>
+        <p style='font-size:18px; color:#6B7280;
+                  margin:8px 0 0 0; font-weight:400;'>
+            Protein Structure Intelligence Dashboard
+            &nbsp;·&nbsp;
+            <span style='color:#6C63FF; font-weight:600;'>
+                Powered by AlphaFold Nobel Prize 2024
+            </span>
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
-    # ── System Status Bar ─────────────────────────────────────
+    # ── Stats Row ────────────────────────────────────────────────
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("🏆 Nobel Prize",  "2024",   "Chemistry")
-    col2.metric("🧬 Proteins",     "200M+",  "Predicted")
+    col2.metric("🧬 Proteins",     "200M+",  "AlphaFold DB")
     col3.metric("🗄️ Databases",    "5",      "Integrated")
     col4.metric("💊 Drug Records", "2M+",    "ChEMBL")
 
-    st.markdown("<br/>", unsafe_allow_html=True)
+    st.markdown("---")
 
-    # ── Active Sequence Panel ─────────────────────────────────
+    # ── Active Protein Card ──────────────────────────────────────
     if uid:
         st.markdown(f"""
-        <div style="
-            background:rgba(10,12,26,0.8);
-            border:1px solid rgba(102,126,234,0.25);
-            border-radius:12px;
-            padding:28px;
-            margin-bottom:24px;
-            position:relative;
-            overflow:hidden;
-        ">
-            <div style="
-                position:absolute; top:16px; right:16px;
-                font-family:'Space Grotesk',monospace;
-                font-size:9px; letter-spacing:0.2em;
-                color:rgba(102,126,234,0.3);
-            ">COORD: {uid[:8]}-N</div>
-
-            <span style="
-                font-family:'Space Grotesk',sans-serif;
-                font-size:9px; letter-spacing:0.2em;
-                color:rgba(246,79,89,0.8);
-                text-transform:uppercase;
-            ">Nobel Prize Foundation · Active Sequence</span>
-
-            <h2 style="
-                font-family:'Space Grotesk',sans-serif;
-                font-size:24px; font-weight:500;
-                color:#ffffff; margin:8px 0 4px 0;
-            ">{info.get('name', 'Unknown Protein')[:60]}</h2>
-
-            <p style="
-                font-size:13px;
-                color:rgba(197,197,213,0.6);
-                margin:0 0 20px 0;
-                max-width:500px;
-            ">{info.get('function','No function data available.')[:200]}</p>
-
-            <div style="display:flex; gap:32px;">
+        <div style='background:linear-gradient(135deg,#6C63FF15,#3B82F615);
+                    border:2px solid #6C63FF30;
+                    border-radius:16px; padding:28px;
+                    margin-bottom:24px;'>
+            <div style='display:flex;
+                        justify-content:space-between;
+                        align-items:flex-start;'>
                 <div>
-                    <p style="font-size:9px; text-transform:uppercase;
-                              color:rgba(197,197,213,0.4);
-                              letter-spacing:0.1em; margin:0;">Gene</p>
-                    <p style="font-family:'Space Grotesk',monospace;
-                              font-size:22px; color:#ffffff;
-                              margin:4px 0 0 0;">{info.get('gene','N/A')}</p>
+                    <span style='background:#6C63FF;
+                                 color:white;
+                                 font-size:11px; font-weight:700;
+                                 padding:4px 12px;
+                                 border-radius:20px;
+                                 letter-spacing:1px;'>
+                        ✅ PROTEIN LOADED
+                    </span>
+                    <h2 style='font-size:26px; font-weight:800;
+                               color:#1A1A2E; margin:12px 0 4px 0;'>
+                        {info.get('name','Unknown Protein')[:55]}
+                    </h2>
+                    <p style='font-size:15px; color:#6B7280;
+                              margin:0 0 16px 0;
+                              font-style:italic;'>
+                        {info.get('organism','Unknown organism')}
+                    </p>
                 </div>
-                <div>
-                    <p style="font-size:9px; text-transform:uppercase;
-                              color:rgba(197,197,213,0.4);
-                              letter-spacing:0.1em; margin:0;">Length</p>
-                    <p style="font-family:'Space Grotesk',monospace;
-                              font-size:22px; color:#00dce6;
-                              margin:4px 0 0 0;">{info.get('length','N/A')} aa</p>
-                </div>
-                <div>
-                    <p style="font-size:9px; text-transform:uppercase;
-                              color:rgba(197,197,213,0.4);
-                              letter-spacing:0.1em; margin:0;">Organism</p>
-                    <p style="font-family:'Space Grotesk',sans-serif;
-                              font-size:14px; color:#b9c3ff;
-                              margin:4px 0 0 0;
-                              font-style:italic;">{info.get('organism','Unknown')[:30]}</p>
-                </div>
-                <div>
-                    <p style="font-size:9px; text-transform:uppercase;
-                              color:rgba(197,197,213,0.4);
-                              letter-spacing:0.1em; margin:0;">Diseases</p>
-                    <p style="font-family:'Space Grotesk',monospace;
-                              font-size:22px; color:#ffb3b2;
-                              margin:4px 0 0 0;">{len(info.get('diseases',[]))}</p>
+                <div style='text-align:right;'>
+                    <p style='font-size:11px; color:#9CA3AF;
+                              margin:0;'>UniProt ID</p>
+                    <p style='font-size:20px; font-weight:700;
+                              color:#6C63FF; margin:4px 0 0 0;
+                              font-family:monospace;'>
+                        {uid}
+                    </p>
                 </div>
             </div>
-
-            <!-- Stability badge -->
-            <div style="
-                position:absolute; bottom:16px; right:16px;
-                display:flex; gap:8px;
-            ">
-                <span style="
-                    background:rgba(102,126,234,0.15);
-                    border-left:2px solid #667eea;
-                    padding:4px 10px;
-                    font-size:9px; font-weight:700;
-                    color:#b9c3ff;
-                    font-family:'Space Grotesk',sans-serif;
-                    letter-spacing:0.1em;
-                ">LOADED</span>
-                <span style="
-                    background:rgba(0,220,230,0.1);
-                    border-left:2px solid #00dce6;
-                    padding:4px 10px;
-                    font-size:9px; font-weight:700;
-                    color:#00dce6;
-                    font-family:'Space Grotesk',sans-serif;
-                    letter-spacing:0.1em;
-                ">LIVE</span>
+            <div style='display:flex; gap:32px; flex-wrap:wrap;'>
+                <div>
+                    <p style='font-size:11px; color:#9CA3AF;
+                              margin:0; font-weight:600;
+                              text-transform:uppercase;
+                              letter-spacing:1px;'>Gene</p>
+                    <p style='font-size:22px; font-weight:700;
+                              color:#1A1A2E; margin:4px 0 0 0;'>
+                        {info.get('gene','N/A')}
+                    </p>
+                </div>
+                <div>
+                    <p style='font-size:11px; color:#9CA3AF;
+                              margin:0; font-weight:600;
+                              text-transform:uppercase;
+                              letter-spacing:1px;'>Length</p>
+                    <p style='font-size:22px; font-weight:700;
+                              color:#3B82F6; margin:4px 0 0 0;'>
+                        {info.get('length','N/A')} aa
+                    </p>
+                </div>
+                <div>
+                    <p style='font-size:11px; color:#9CA3AF;
+                              margin:0; font-weight:600;
+                              text-transform:uppercase;
+                              letter-spacing:1px;'>Diseases</p>
+                    <p style='font-size:22px; font-weight:700;
+                              color:#EF4444; margin:4px 0 0 0;'>
+                        {len(info.get('diseases',[]))}
+                    </p>
+                </div>
+                <div>
+                    <p style='font-size:11px; color:#9CA3AF;
+                              margin:0; font-weight:600;
+                              text-transform:uppercase;
+                              letter-spacing:1px;'>Location</p>
+                    <p style='font-size:14px; font-weight:600;
+                              color:#06B6D4; margin:8px 0 0 0;'>
+                        {info.get('location','Unknown')[:25]}
+                    </p>
+                </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-        # ── Disease Discovery Feed ─────────────────────────────
+        # Biological Function
+        st.markdown("### 🔬 Biological Function")
+        func = info.get("function", "Not available")
+        if func != "Not available":
+            st.success(func[:400])
+        else:
+            st.info("Function information not available for this protein.")
+
+        # Disease associations
         diseases = info.get("diseases", [])
         if diseases:
-            st.markdown("""
-            <p style="
-                font-family:'Space Grotesk',sans-serif;
-                font-size:9px; letter-spacing:0.2em;
-                color:rgba(197,197,213,0.4);
-                text-transform:uppercase;
-                margin:0 0 12px 0;
-            ">Disease Associations</p>
-            """, unsafe_allow_html=True)
-
-            cols = st.columns(min(3, len(diseases)))
-            tags = ["STABILITY_LOW", "TOXICITY_ALERT", "TARGET_FOUND"]
-            colors = ["#667eea", "#f64f59", "#00dce6"]
-
-            for i, disease in enumerate(diseases[:3]):
-                with cols[i]:
-                    tag   = tags[i % 3]
-                    color = colors[i % 3]
+            st.markdown("### 🦠 Disease Associations")
+            cols = st.columns(3)
+            colors = ["#EF444415","#F59E0B15","#8B5CF615"]
+            borders = ["#EF4444","#F59E0B","#8B5CF6"]
+            for i, disease in enumerate(diseases[:6]):
+                with cols[i % 3]:
                     st.markdown(f"""
-                    <div style="
-                        background:rgba(10,12,26,0.8);
-                        border:1px solid rgba(255,255,255,0.08);
-                        border-radius:8px;
-                        padding:16px;
-                        cursor:pointer;
-                        transition:border-color 0.3s ease;
-                    ">
-                        <div style="display:flex;
-                                    justify-content:space-between;
-                                    margin-bottom:12px;">
-                            <span style="
-                                background:rgba(255,255,255,0.03);
-                                border-left:2px solid {color};
-                                padding:3px 8px;
-                                font-size:9px; font-weight:700;
-                                color:{color};
-                                font-family:'Space Grotesk',sans-serif;
-                                letter-spacing:0.1em;
-                            ">{tag}</span>
-                            <span style="
-                                font-family:'Space Grotesk',sans-serif;
-                                font-size:9px;
-                                letter-spacing:0.15em;
-                                color:rgba(185,195,255,0.3);
-                            ">MOD_{str(i+1).zfill(2)}</span>
-                        </div>
-                        <p style="
-                            font-size:12px;
-                            color:rgba(225,225,246,0.8);
-                            margin:0;
-                            line-height:1.5;
-                        ">{disease[:80]}</p>
+                    <div style='background:{colors[i%3]};
+                                border-left:3px solid {borders[i%3]};
+                                border-radius:8px;
+                                padding:10px 14px;
+                                margin-bottom:8px;'>
+                        <p style='font-size:12px; font-weight:600;
+                                  color:#1A1A2E; margin:0;'>
+                            {disease[:50]}
+                        </p>
                     </div>
                     """, unsafe_allow_html=True)
 
-        # ── Live Sequence Stream ───────────────────────────────
-        st.markdown("<br/>", unsafe_allow_html=True)
-        st.markdown("""
-        <div style="
-            background:rgba(10,12,26,0.6);
-            border:1px solid rgba(255,255,255,0.07);
-            border-radius:8px;
-            padding:16px;
-        ">
-            <div style="display:flex; justify-content:space-between;
-                        align-items:center; margin-bottom:10px;">
-                <span style="
-                    font-family:'Space Grotesk',sans-serif;
-                    font-size:9px; letter-spacing:0.2em;
-                    color:rgba(197,197,213,0.4);
-                    text-transform:uppercase;
-                ">Live Sequence Stream</span>
-                <div style="display:flex; gap:16px; align-items:center;">
-                    <div style="display:flex; align-items:center; gap:4px;">
-                        <div style="width:6px; height:6px; border-radius:50%;
-                                    background:#667eea;
-                                    box-shadow:0 0 8px #667eea;"></div>
-                        <span style="font-size:9px; color:rgba(197,197,213,0.5);
-                                     font-family:'Space Grotesk',monospace;">
-                            HYDROPHOBIC</span>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:4px;">
-                        <div style="width:6px; height:6px; border-radius:50%;
-                                    background:#f64f59;
-                                    box-shadow:0 0 8px #f64f59;"></div>
-                        <span style="font-size:9px; color:rgba(197,197,213,0.5);
-                                     font-family:'Space Grotesk',monospace;">
-                            POLAR</span>
-                    </div>
-                </div>
-            </div>
-        """, unsafe_allow_html=True)
-
-        # Render actual amino acid sequence if available
-        try:
-            seq = st.session_state.uniprot_raw.get(
-                "sequence", {}
-            ).get("value", "MARTKQTARKSTGGKAPRKQLATKAARKSAPATGGVKKPHRYRPGTVALREIRRYQKSTELLIRKLPFQRLVREIAQDFKTDLRFQSSAVMALQEACEAYLVGLFEDTNLCAIHAKRVTIMPKDIQLARRIRGERA")[:80]
-
-            aa_colors = {
-                'A':'#667eea','R':'#f64f59','N':'#00dce6',
-                'D':'#f64f59','C':'#00dce6','Q':'#667eea',
-                'E':'#f64f59','G':'#b9c3ff','H':'#00dce6',
-                'I':'#667eea','L':'#667eea','K':'#f64f59',
-                'M':'#00dce6','F':'#b9c3ff','P':'#667eea',
-                'S':'#f64f59','T':'#f64f59','W':'#b9c3ff',
-                'Y':'#00dce6','V':'#667eea'
-            }
-            seq_html = "<div style='background:rgba(0,0,0,0.4); border-radius:4px; padding:12px; font-family:Space Grotesk,monospace; font-size:12px; letter-spacing:0.08em; display:flex; flex-wrap:wrap; gap:2px;'>"
-            for aa in seq:
-                c = aa_colors.get(aa, '#888')
-                seq_html += f"<span style='color:{c};'>{aa}</span>"
-            seq_html += "</div>"
-            st.markdown(seq_html + "</div>", unsafe_allow_html=True)
-        except:
-            st.markdown("</div>", unsafe_allow_html=True)
+        # Navigate buttons
+        st.markdown("---")
+        st.markdown("### 🚀 Explore This Protein")
+        c1, c2, c3, c4 = st.columns(4)
+        with c1:
+            if st.button("🏗️ View Structure",
+                         use_container_width=True):
+                st.session_state["_nav"] = "structure"
+        with c2:
+            if st.button("⚙️ Function & Disease",
+                         use_container_width=True):
+                st.session_state["_nav"] = "function"
+        with c3:
+            if st.button("💊 Drug Intelligence",
+                         use_container_width=True):
+                st.session_state["_nav"] = "drugs"
+        with c4:
+            if st.button("🔗 Similar Proteins",
+                         use_container_width=True):
+                st.session_state["_nav"] = "similar"
 
     else:
-        # ── Landing State ──────────────────────────────────────
+        # ── Landing State ────────────────────────────────────────
         st.markdown("""
-        <div style="
-            background:rgba(102,126,234,0.05);
-            border:1px solid rgba(102,126,234,0.15);
-            border-radius:12px;
-            padding:48px;
-            text-align:center;
-            margin:32px 0;
-        ">
-            <div style="font-size:48px; margin-bottom:16px;">🧬</div>
-            <h2 style="
-                font-family:'Space Grotesk',sans-serif;
-                font-size:24px; font-weight:500;
-                color:#b9c3ff; margin:0 0 12px 0;
-            ">Query a Protein Sequence</h2>
-            <p style="color:rgba(197,197,213,0.5); font-size:14px; margin:0;">
-                Use the sidebar search to load a protein and explore
-                its structure, function, and clinical data.</p>
-            <div style="margin-top:24px; display:flex;
-                        justify-content:center; gap:16px; flex-wrap:wrap;">
+        <div style='background:linear-gradient(135deg,#6C63FF08,#3B82F608);
+                    border:2px dashed #6C63FF30;
+                    border-radius:16px; padding:48px;
+                    text-align:center; margin:16px 0 32px 0;'>
+            <div style='font-size:56px; margin-bottom:16px;'>🔬</div>
+            <h2 style='font-size:24px; font-weight:700;
+                       color:#1A1A2E; margin:0 0 12px 0;'>
+                Search for a Protein to Begin
+            </h2>
+            <p style='font-size:15px; color:#6B7280;
+                      margin:0 0 24px 0; max-width:480px;
+                      margin-left:auto; margin-right:auto;'>
+                Use the search box in the sidebar to find any protein.
+                Try typing a gene name, protein name, or UniProt ID.
+            </p>
+            <div style='display:flex; flex-wrap:wrap;
+                        gap:10px; justify-content:center;'>
         """, unsafe_allow_html=True)
 
-        for ex in ["ACE2 — COVID-19 Receptor",
-                   "BRCA1 — Breast Cancer Gene",
-                   "TP53 — Tumour Suppressor",
-                   "ACHE — Alzheimer's Target"]:
+        examples = [
+            ("ACE2",  "COVID-19 Receptor"),
+            ("BRCA1", "Breast Cancer Gene"),
+            ("TP53",  "Tumour Suppressor"),
+            ("ACHE",  "Alzheimer's Target"),
+            ("INS",   "Insulin"),
+            ("HBB",   "Haemoglobin Beta"),
+        ]
+        for gene, desc in examples:
             st.markdown(f"""
-            <span style="
-                background:rgba(102,126,234,0.1);
-                border:1px solid rgba(102,126,234,0.3);
-                border-radius:4px;
-                padding:6px 14px;
-                font-family:'Space Grotesk',monospace;
-                font-size:11px;
-                color:#b9c3ff;
-                letter-spacing:0.05em;
-            ">{ex}</span>
+            <span style='background:white;
+                         border:2px solid #6C63FF30;
+                         border-radius:8px;
+                         padding:8px 16px;
+                         font-size:13px; font-weight:600;
+                         color:#6C63FF;'>
+                {gene}
+                <span style='color:#9CA3AF;
+                             font-weight:400;
+                             font-size:11px;'>
+                    — {desc}
+                </span>
+            </span>
             """, unsafe_allow_html=True)
 
         st.markdown("</div></div>", unsafe_allow_html=True)
 
-        # Feature cards
-        st.markdown("<br/>", unsafe_allow_html=True)
-        c1, c2, c3 = st.columns(3)
+        # Feature overview cards
+        st.markdown("### 🎯 What AlphaExplorer Can Do")
         features = [
             ("🏗️", "Structure Viewer",
-             "3D AlphaFold structure with confidence coloring using Molstar renderer",
-             "#667eea"),
+             "View AlphaFold 3D predicted structure with pLDDT confidence coloring. Download PDB and CIF files.",
+             "#6C63FF"),
             ("⚙️", "Function & Disease",
-             "GO Terms, subcellular location and disease associations from UniProt",
-             "#00dce6"),
+             "Explore biological function, GO terms across 3 categories, disease links, and subcellular location.",
+             "#3B82F6"),
             ("💊", "Drug Intelligence",
-             "Clinical phase data and drug pipeline from ChEMBL database",
-             "#f64f59"),
+             "Find FDA-approved drugs and clinical candidates targeting your protein from ChEMBL database.",
+             "#06B6D4"),
+            ("🔗", "Similar Proteins",
+             "Discover related proteins and gene families across species using UniProt search expansion.",
+             "#8B5CF6"),
         ]
-        for col, (icon, title, desc, color) in zip([c1,c2,c3], features):
-            with col:
+        c1, c2 = st.columns(2)
+        for i, (icon, title, desc, color) in enumerate(features):
+            with (c1 if i % 2 == 0 else c2):
                 st.markdown(f"""
-                <div style="
-                    background:rgba(10,12,26,0.8);
-                    border:1px solid rgba(255,255,255,0.07);
-                    border-radius:8px; padding:24px;
-                    border-top:2px solid {color};
-                ">
-                    <div style="font-size:28px; margin-bottom:12px;">{icon}</div>
-                    <h4 style="
-                        font-family:'Space Grotesk',sans-serif;
-                        font-size:15px; color:#ffffff;
-                        margin:0 0 8px 0;
-                    ">{title}</h4>
-                    <p style="
-                        font-size:12px;
-                        color:rgba(197,197,213,0.55);
-                        margin:0; line-height:1.6;
-                    ">{desc}</p>
+                <div style='background:white;
+                            border-radius:12px;
+                            padding:24px;
+                            margin-bottom:16px;
+                            box-shadow:0 2px 12px rgba(0,0,0,0.06);
+                            border-top:3px solid {color};'>
+                    <div style='font-size:32px;
+                                margin-bottom:10px;'>{icon}</div>
+                    <h4 style='font-size:16px; font-weight:700;
+                               color:#1A1A2E; margin:0 0 8px 0;'>
+                        {title}
+                    </h4>
+                    <p style='font-size:13px; color:#6B7280;
+                              margin:0; line-height:1.6;'>
+                        {desc}
+                    </p>
                 </div>
                 """, unsafe_allow_html=True)
+
+    # ── Footer ───────────────────────────────────────────────────
+    st.markdown("---")
+    st.caption(
+        "Data: AlphaFold DB · UniProt · ChEMBL · PDB | "
+        "Built by Talha Saleem · UAF · 2026"
+    )

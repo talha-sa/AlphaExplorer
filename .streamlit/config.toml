@@ -1,11 +1,9 @@
-[client]
-# This allows our custom search and name to actually show up
-showSidebarNavigation = false 
+[ui]
+hideSidebarNav = true
 
 [theme]
-# We want the app to start in Dark Mode to match your Cinematic UI
-base = "dark"
-primaryColor = "#667eea"
-backgroundColor = "#0a0c1a"
-secondaryBackgroundColor = "#161b33"
-textColor = "#e1e1f6"
+primaryColor = "#6C63FF"
+backgroundColor = "#F8F9FF"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#1A1A2E"
+font = "sans serif"
