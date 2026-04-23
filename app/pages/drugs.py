@@ -83,18 +83,10 @@ def show():
 
     st.markdown("<br/>", unsafe_allow_html=True)
 
-    # ── Bento Grid Drug Cards ────────────────────────────────────
-    st.markdown("""
-    <p style="
-        font-family:'Space Grotesk',sans-serif;
-        font-size:9px; letter-spacing:0.2em;
-        color:rgba(197,197,213,0.4);
-        text-transform:uppercase;
-        margin:0 0 14px 0;
-    ">Drug Phase Cards</p>
-    """, unsafe_allow_html=True)
+    # ── Drug Cards ───────────────────────────────────────────────
+    st.markdown("**Drug Phase Cards**")
 
-    # Show top 6 drugs as bento cards
+    # Show top 6 drugs as native Streamlit cards
     top_drugs = drugs[:6]
     for i in range(0, len(top_drugs), 3):
         row = top_drugs[i:i+3]
@@ -102,12 +94,7 @@ def show():
         for col, drug in zip(cols, row):
             with col:
                 phase_num = drug.get("Phase Number", -1)
-                style     = PHASE_STYLES.get(phase_num, PHASE_STYLES[-1])
-                color     = style["color"]
-                bg        = style["bg"]
-                label     = style["label"]
-                # molecule_name is not returned by drug_indication endpoint;
-                # fall back to ChEMBL ID as the display name
+                label     = PHASE_STYLES.get(phase_num, PHASE_STYLES[-1])["label"]
                 chembl_id = drug.get("ChEMBL ID", "N/A")
                 raw_name  = drug.get("Drug Name") or chembl_id
                 name      = str(raw_name)[:22]
@@ -115,43 +102,21 @@ def show():
                 ind       = str(raw_ind)[:55] if raw_ind and raw_ind != "N/A" else "Indication data not available"
                 phase_display = str(phase_num) if phase_num >= 0 else "N/A"
                 if phase_num == 4:
-                    status = "APPROVED"
+                    status = "✅ Approved"
                 elif phase_num >= 1:
-                    status = "ONGOING"
+                    status = "🔬 Ongoing"
                 else:
-                    status = "PRECLINICAL"
+                    status = "💡 Preclinical"
 
-                card_html = (
-                    f'<div style="background:{bg}; border:1px solid {color}40;'
-                    f' border-radius:10px; padding:20px; margin-bottom:4px;">'
-                    f'<div style="display:flex; justify-content:space-between;'
-                    f' align-items:center; margin-bottom:14px;">'
-                    f'<span style="background:{bg}; border:1px solid {color}60;'
-                    f' padding:4px 10px; font-size:9px; font-weight:700;'
-                    f' color:{color}; border-radius:4px; letter-spacing:0.08em;">'
-                    f'{label}</span>'
-                    f'<span style="font-size:8px; color:rgba(197,197,213,0.3);'
-                    f' letter-spacing:0.15em;">{chembl_id[:12]}</span>'
-                    f'</div>'
-                    f'<h4 style="font-size:15px; font-weight:600; color:#ffffff;'
-                    f' margin:0 0 8px 0;">{name}</h4>'
-                    f'<p style="font-size:11px; color:rgba(197,197,213,0.55);'
-                    f' margin:0 0 16px 0; line-height:1.5;">{ind}</p>'
-                    f'<div style="border-top:1px solid rgba(255,255,255,0.05);'
-                    f' padding-top:12px; display:flex; justify-content:space-between;">'
-                    f'<div><p style="font-size:8px; text-transform:uppercase;'
-                    f' color:rgba(197,197,213,0.35); margin:0;">Phase</p>'
-                    f'<p style="font-size:14px; color:{color};'
-                    f' margin:2px 0 0 0; font-weight:700;">{phase_display}</p></div>'
-                    f'<div style="text-align:right;">'
-                    f'<p style="font-size:8px; text-transform:uppercase;'
-                    f' color:rgba(197,197,213,0.35); margin:0;">Status</p>'
-                    f'<p style="font-size:11px; color:{color}; margin:2px 0 0 0;">'
-                    f'{status}</p></div></div></div>'
-                )
-                st.markdown(card_html, unsafe_allow_html=True)
+                with st.container(border=True):
+                    st.markdown(f"**{label}** &nbsp; `{chembl_id[:12]}`", unsafe_allow_html=True)
+                    st.markdown(f"**{name}**")
+                    st.caption(ind)
+                    c1, c2 = st.columns(2)
+                    c1.metric("Phase", phase_display)
+                    c2.metric("Status", status)
 
-    st.markdown("<br/>", unsafe_allow_html=True)
+    st.divider()
 
     # ── Pipeline Chart ───────────────────────────────────────────
     st.markdown("""
