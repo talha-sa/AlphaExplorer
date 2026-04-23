@@ -102,88 +102,54 @@ def show():
         for col, drug in zip(cols, row):
             with col:
                 phase_num = drug.get("Phase Number", -1)
-                style = PHASE_STYLES.get(
-                    phase_num, PHASE_STYLES[-1]
+                style     = PHASE_STYLES.get(phase_num, PHASE_STYLES[-1])
+                color     = style["color"]
+                bg        = style["bg"]
+                label     = style["label"]
+                # molecule_name is not returned by drug_indication endpoint;
+                # fall back to ChEMBL ID as the display name
+                chembl_id = drug.get("ChEMBL ID", "N/A")
+                raw_name  = drug.get("Drug Name") or chembl_id
+                name      = str(raw_name)[:22]
+                raw_ind   = drug.get("Indication", "N/A")
+                ind       = str(raw_ind)[:55] if raw_ind and raw_ind != "N/A" else "Indication data not available"
+                phase_display = str(phase_num) if phase_num >= 0 else "N/A"
+                if phase_num == 4:
+                    status = "APPROVED"
+                elif phase_num >= 1:
+                    status = "ONGOING"
+                else:
+                    status = "PRECLINICAL"
+
+                card_html = (
+                    f'<div style="background:{bg}; border:1px solid {color}40;'
+                    f' border-radius:10px; padding:20px; margin-bottom:4px;">'
+                    f'<div style="display:flex; justify-content:space-between;'
+                    f' align-items:center; margin-bottom:14px;">'
+                    f'<span style="background:{bg}; border:1px solid {color}60;'
+                    f' padding:4px 10px; font-size:9px; font-weight:700;'
+                    f' color:{color}; border-radius:4px; letter-spacing:0.08em;">'
+                    f'{label}</span>'
+                    f'<span style="font-size:8px; color:rgba(197,197,213,0.3);'
+                    f' letter-spacing:0.15em;">{chembl_id[:12]}</span>'
+                    f'</div>'
+                    f'<h4 style="font-size:15px; font-weight:600; color:#ffffff;'
+                    f' margin:0 0 8px 0;">{name}</h4>'
+                    f'<p style="font-size:11px; color:rgba(197,197,213,0.55);'
+                    f' margin:0 0 16px 0; line-height:1.5;">{ind}</p>'
+                    f'<div style="border-top:1px solid rgba(255,255,255,0.05);'
+                    f' padding-top:12px; display:flex; justify-content:space-between;">'
+                    f'<div><p style="font-size:8px; text-transform:uppercase;'
+                    f' color:rgba(197,197,213,0.35); margin:0;">Phase</p>'
+                    f'<p style="font-size:14px; color:{color};'
+                    f' margin:2px 0 0 0; font-weight:700;">{phase_display}</p></div>'
+                    f'<div style="text-align:right;">'
+                    f'<p style="font-size:8px; text-transform:uppercase;'
+                    f' color:rgba(197,197,213,0.35); margin:0;">Status</p>'
+                    f'<p style="font-size:11px; color:{color}; margin:2px 0 0 0;">'
+                    f'{status}</p></div></div></div>'
                 )
-                color = style["color"]
-                bg    = style["bg"]
-                label = style["label"]
-                name  = drug.get("Drug Name", "Unknown")
-                ind   = drug.get("Indication", "N/A")
-
-                st.markdown(f"""
-                <div style="
-                    background:{bg};
-                    border:1px solid {color}40;
-                    border-radius:10px;
-                    padding:20px;
-                    margin-bottom:4px;
-                    transition:all 0.3s ease;
-                ">
-                    <div style="display:flex;
-                                justify-content:space-between;
-                                align-items:center;
-                                margin-bottom:14px;">
-                        <span style="
-                            background:{bg};
-                            border:1px solid {color}60;
-                            padding:4px 10px;
-                            font-family:'Space Grotesk',sans-serif;
-                            font-size:9px; font-weight:700;
-                            color:{color};
-                            border-radius:4px;
-                            letter-spacing:0.08em;
-                        ">{label}</span>
-                        <span style="
-                            font-family:'Space Grotesk',monospace;
-                            font-size:8px;
-                            color:rgba(197,197,213,0.3);
-                            letter-spacing:0.15em;
-                        ">{drug.get('ChEMBL ID','N/A')[:12]}</span>
-                    </div>
-
-                    <h4 style="
-                        font-family:'Space Grotesk',sans-serif;
-                        font-size:15px; font-weight:600;
-                        color:#ffffff; margin:0 0 8px 0;
-                    ">{name[:22]}</h4>
-
-                    <p style="
-                        font-size:11px;
-                        color:rgba(197,197,213,0.55);
-                        margin:0 0 16px 0;
-                        line-height:1.5;
-                    ">{ind[:55] if ind != 'N/A' else 'Indication data not available'}</p>
-
-                    <div style="
-                        border-top:1px solid rgba(255,255,255,0.05);
-                        padding-top:12px;
-                        display:flex;
-                        justify-content:space-between;
-                    ">
-                        <div>
-                            <p style="font-size:8px; text-transform:uppercase;
-                                      letter-spacing:0.1em;
-                                      color:rgba(197,197,213,0.35);
-                                      margin:0;">Phase</p>
-                            <p style="font-family:'Space Grotesk',monospace;
-                                      font-size:14px; color:{color};
-                                      margin:2px 0 0 0; font-weight:700;">
-                                {phase_num if phase_num >= 0 else 'N/A'}</p>
-                        </div>
-                        <div style="text-align:right;">
-                            <p style="font-size:8px; text-transform:uppercase;
-                                      letter-spacing:0.1em;
-                                      color:rgba(197,197,213,0.35);
-                                      margin:0;">Status</p>
-                            <p style="font-family:'Space Grotesk',monospace;
-                                      font-size:11px; color:{color};
-                                      margin:2px 0 0 0;">
-                                {'APPROVED' if phase_num==4 else 'ONGOING' if phase_num>=1 else 'PRECLINICAL'}</p>
-                        </div>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown(card_html, unsafe_allow_html=True)
 
     st.markdown("<br/>", unsafe_allow_html=True)
 
