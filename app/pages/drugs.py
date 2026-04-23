@@ -83,39 +83,6 @@ def show():
 
     st.markdown("<br/>", unsafe_allow_html=True)
 
-    # ── Drug Cards ───────────────────────────────────────────────
-    st.markdown("**Drug Phase Cards**")
-
-    # Show top 6 drugs as native Streamlit cards
-    top_drugs = drugs[:6]
-    for i in range(0, len(top_drugs), 3):
-        row = top_drugs[i:i+3]
-        cols = st.columns(len(row))
-        for col, drug in zip(cols, row):
-            with col:
-                phase_num = drug.get("Phase Number", -1)
-                label     = PHASE_STYLES.get(phase_num, PHASE_STYLES[-1])["label"]
-                chembl_id = drug.get("ChEMBL ID", "N/A")
-                raw_name  = drug.get("Drug Name") or chembl_id
-                name      = str(raw_name)[:22]
-                raw_ind   = drug.get("Indication", "N/A")
-                ind       = str(raw_ind)[:55] if raw_ind and raw_ind != "N/A" else "Indication data not available"
-                phase_display = str(phase_num) if phase_num >= 0 else "N/A"
-                if phase_num == 4:
-                    status = "✅ Approved"
-                elif phase_num >= 1:
-                    status = "🔬 Ongoing"
-                else:
-                    status = "💡 Preclinical"
-
-                with st.container(border=True):
-                    st.markdown(f"**{label}** &nbsp; `{chembl_id[:12]}`", unsafe_allow_html=True)
-                    st.markdown(f"**{name}**")
-                    st.caption(ind)
-                    c1, c2 = st.columns(2)
-                    c1.metric("Phase", phase_display)
-                    c2.metric("Status", status)
-
     st.divider()
 
     # ── Pipeline Chart ───────────────────────────────────────────
