@@ -29,11 +29,18 @@ st.markdown("""
             #6C63FF 0%, #3B82F6 60%, #06B6D4 100%) !important;
     }
     [data-testid="stSidebar"] * { color: white !important; }
-    [data-testid="stSidebar"] .stTextInput input {
-        background: rgba(255,255,255,0.15) !important;
-        border: 1px solid rgba(255,255,255,0.4) !important;
+    [data-testid="stSidebar"] .stTextInput input,
+    [data-testid="stSidebar"] .stTextInput input:focus,
+    [data-testid="stSidebar"] .stTextInput input:active,
+    [data-testid="stSidebar"] .stTextInput input:hover {
+        background: rgba(255,255,255,0.18) !important;
+        border: 1px solid rgba(255,255,255,0.5) !important;
         border-radius: 8px !important;
         color: white !important;
+        -webkit-text-fill-color: white !important;
+        caret-color: white !important;
+        box-shadow: none !important;
+        outline: none !important;
     }
     [data-testid="stSidebar"] .stTextInput input::placeholder {
         color: rgba(255,255,255,0.6) !important;
@@ -43,7 +50,7 @@ st.markdown("""
     [data-testid="stSidebar"] .stTextInput input:-webkit-autofill:hover,
     [data-testid="stSidebar"] .stTextInput input:-webkit-autofill:focus {
         -webkit-text-fill-color: white !important;
-        -webkit-box-shadow: 0 0 0px 1000px rgba(108,99,255,0.4) inset !important;
+        -webkit-box-shadow: 0 0 0px 1000px rgba(80,60,220,0.7) inset !important;
         caret-color: white !important;
     }
     [data-testid="stSidebar"] .stSelectbox > div > div {
