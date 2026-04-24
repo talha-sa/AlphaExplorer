@@ -1,29 +1,29 @@
 # AlphaExplorer - Home Page with Central Search Bar
 
 import streamlit as st
-import textwrap
+
 
 def show():
     uid  = st.session_state.get("uniprot_id")
     info = st.session_state.get("protein_info", {})
 
     # ── Hero Header ──────────────────────────────────────────────
-    st.markdown(textwrap.dedent("""
-    <div style='padding:10px 0 24px 0;'>
-        <h1 style='font-size:42px; font-weight:800;
-                   color:#1A1A2E; margin:0; line-height:1.2;'>
-            🧬 AlphaExplorer
-        </h1>
-        <p style='font-size:18px; color:#6B7280;
-                  margin:8px 0 0 0; font-weight:400;'>
-            Protein Structure Intelligence Dashboard
-            &nbsp;·&nbsp;
-            <span style='color:#6C63FF; font-weight:600;'>
-                Powered by AlphaFold Nobel Prize 2024
-            </span>
-        </p>
-    </div>
-    """), unsafe_allow_html=True)
+    st.markdown("""
+<div style='padding:10px 0 24px 0;'>
+    <h1 style='font-size:42px; font-weight:800;
+               color:#1A1A2E; margin:0; line-height:1.2;'>
+        🧬 AlphaExplorer
+    </h1>
+    <p style='font-size:18px; color:#6B7280;
+              margin:8px 0 0 0; font-weight:400;'>
+        Protein Structure Intelligence Dashboard
+        &nbsp;·&nbsp;
+        <span style='color:#6C63FF; font-weight:600;'>
+            Powered by AlphaFold Nobel Prize 2024
+        </span>
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
     # ── Stats Row ─────────────────────────────────────────────────
     col1, col2, col3, col4 = st.columns(4)
@@ -36,41 +36,41 @@ def show():
 
     # ── Central Search Bar ────────────────────────────────────────
     st.markdown("""
-    <div style='text-align:center; margin:8px 0 24px 0;'>
-        <h2 style='font-size:26px; font-weight:700;
-                   color:#1A1A2E; margin:0 0 6px 0;'>
-            🔍 Search Any Protein
-        </h2>
-        <p style='font-size:14px; color:#6B7280; margin:0 0 20px 0;'>
-            Enter a gene name, protein name, or UniProt ID
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
+<div style='text-align:center; margin:8px 0 24px 0;'>
+    <h2 style='font-size:26px; font-weight:700;
+               color:#1A1A2E; margin:0 0 6px 0;'>
+        🔍 Search Any Protein
+    </h2>
+    <p style='font-size:14px; color:#6B7280; margin:0 0 20px 0;'>
+        Enter a gene name, protein name, or UniProt ID
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
     # Central search input — uses same session state as sidebar
     _, col_search, _ = st.columns([1, 3, 1])
     with col_search:
         st.markdown("""
-        <style>
-        /* Style only the central search box */
-        div[data-testid="stHorizontalBlock"] .stTextInput input {
-            background: white !important;
-            border: 2px solid #6C63FF !important;
-            border-radius: 50px !important;
-            padding: 12px 24px !important;
-            font-size: 16px !important;
-            color: #1A1A2E !important;
-            box-shadow: 0 4px 20px rgba(108,99,255,0.15) !important;
-        }
-        div[data-testid="stHorizontalBlock"] .stTextInput input:focus {
-            box-shadow: 0 4px 24px rgba(108,99,255,0.3) !important;
-            border-color: #3B82F6 !important;
-        }
-        div[data-testid="stHorizontalBlock"] .stTextInput input::placeholder {
-            color: #9CA3AF !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
+<style>
+/* Style only the central search box */
+div[data-testid="stHorizontalBlock"] .stTextInput input {
+    background: white !important;
+    border: 2px solid #6C63FF !important;
+    border-radius: 50px !important;
+    padding: 12px 24px !important;
+    font-size: 16px !important;
+    color: #1A1A2E !important;
+    box-shadow: 0 4px 20px rgba(108,99,255,0.15) !important;
+}
+div[data-testid="stHorizontalBlock"] .stTextInput input:focus {
+    box-shadow: 0 4px 24px rgba(108,99,255,0.3) !important;
+    border-color: #3B82F6 !important;
+}
+div[data-testid="stHorizontalBlock"] .stTextInput input::placeholder {
+    color: #9CA3AF !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
         central_query = st.text_input(
             "Central Search",
@@ -110,19 +110,19 @@ def show():
                                  ["recommendedName"]
                                  ["fullName"]["value"]
                             )
-                        except:
+                        except Exception:
                             try:
                                 name = (
                                     r["proteinDescription"]
                                      ["submittedNames"][0]
                                      ["fullName"]["value"]
                                 )
-                            except:
+                            except Exception:
                                 name = "Unknown"
                         acc = r.get("primaryAccession", "N/A")
                         try:
                             org = r["organism"]["scientificName"]
-                        except:
+                        except Exception:
                             org = "Unknown"
                         options.append(
                             f"{name[:28]} | {acc} | {org[:18]}"
@@ -172,13 +172,13 @@ def show():
     # ── Quick Example Chips ───────────────────────────────────────
     if not uid:
         st.markdown("""
-        <div style='text-align:center; margin:16px 0 8px 0;'>
-            <p style='font-size:12px; color:#9CA3AF;
-                      font-weight:600; letter-spacing:1px;'>
-                TRY THESE EXAMPLES
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+<div style='text-align:center; margin:16px 0 8px 0;'>
+    <p style='font-size:12px; color:#9CA3AF;
+              font-weight:600; letter-spacing:1px;'>
+        TRY THESE EXAMPLES
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
         _, chip_col, _ = st.columns([1, 4, 1])
         with chip_col:
@@ -194,112 +194,117 @@ def show():
             ):
                 with chip:
                     st.markdown(f"""
-                    <div style='background:white;
-                                border:2px solid #6C63FF20;
-                                border-radius:8px;
-                                padding:8px 6px;
-                                text-align:center;
-                                box-shadow:0 2px 8px rgba(0,0,0,0.05);'>
-                        <p style='font-size:13px; font-weight:700;
-                                  color:#6C63FF; margin:0;'>
-                            {gene}
-                        </p>
-                        <p style='font-size:9px; color:#9CA3AF;
-                                  margin:2px 0 0 0;'>
-                            {desc}
-                        </p>
-                    </div>
-                    """, unsafe_allow_html=True)
+<div style='background:white;
+            border:2px solid #6C63FF20;
+            border-radius:8px;
+            padding:8px 6px;
+            text-align:center;
+            box-shadow:0 2px 8px rgba(0,0,0,0.05);'>
+    <p style='font-size:13px; font-weight:700;
+              color:#6C63FF; margin:0;'>
+        {gene}
+    </p>
+    <p style='font-size:9px; color:#9CA3AF;
+              margin:2px 0 0 0;'>
+        {desc}
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
     st.markdown("---")
 
     # ── Active Protein Card ───────────────────────────────────────
     if uid:
-        st.markdown(textwrap.dedent(f"""
-        <div style='background:linear-gradient(
-                        135deg,#6C63FF15,#3B82F615);
-                    border:2px solid #6C63FF30;
-                    border-radius:16px; padding:28px;
-                    margin-bottom:24px;'>
-            <div style='display:flex;
-                        justify-content:space-between;
-                        align-items:flex-start; flex-wrap:wrap;
-                        gap:16px;'>
-                <div>
-                    <span style='background:#6C63FF; color:white;
-                                 font-size:11px; font-weight:700;
-                                 padding:4px 14px;
-                                 border-radius:20px;
-                                 letter-spacing:1px;'>
-                        ✅ PROTEIN LOADED
-                    </span>
-                    <h2 style='font-size:24px; font-weight:800;
-                               color:#1A1A2E;
-                               margin:12px 0 4px 0;'>
-                        {info.get('name','Unknown')[:55]}
-                    </h2>
-                    <p style='font-size:14px; color:#6B7280;
-                              margin:0; font-style:italic;'>
-                        {info.get('organism','Unknown')}
-                    </p>
-                </div>
-                <div style='text-align:right;'>
-                    <p style='font-size:11px; color:#9CA3AF; margin:0;'>
-                        UniProt ID
-                    </p>
-                    <p style='font-size:20px; font-weight:700;
-                              color:#6C63FF; margin:4px 0 0 0;
-                              font-family:monospace;'>
-                        {uid}
-                    </p>
-                </div>
-            </div>
+        protein_name = info.get('name', 'Unknown')[:55]
+        organism     = info.get('organism', 'Unknown')
+        gene         = info.get('gene', 'N/A')
+        length       = info.get('length', 'N/A')
+        num_diseases = len(info.get('diseases', []))
+        location     = info.get('location', 'Unknown')[:30]
 
-            <div style='display:flex; gap:40px;
-                        flex-wrap:wrap; margin-top:20px;'>
-                <div>
-                    <p style='font-size:10px; color:#9CA3AF;
-                              margin:0; font-weight:700;
-                              text-transform:uppercase;
-                              letter-spacing:1px;'>Gene</p>
-                    <p style='font-size:24px; font-weight:700;
-                              color:#1A1A2E; margin:4px 0 0 0;'>
-                        {info.get('gene','N/A')}
-                    </p>
-                </div>
-                <div>
-                    <p style='font-size:10px; color:#9CA3AF;
-                              margin:0; font-weight:700;
-                              text-transform:uppercase;
-                              letter-spacing:1px;'>Length</p>
-                    <p style='font-size:24px; font-weight:700;
-                              color:#3B82F6; margin:4px 0 0 0;'>
-                        {info.get('length','N/A')} aa
-                    </p>
-                </div>
-                <div>
-                    <p style='font-size:10px; color:#9CA3AF;
-                              margin:0; font-weight:700;
-                              text-transform:uppercase;
-                              letter-spacing:1px;'>Diseases</p>
-                    <p style='font-size:24px; font-weight:700;
-                              color:#EF4444; margin:4px 0 0 0;'>
-                        {len(info.get('diseases',[]))}
-                    </p>
-                </div>
-                <div>
-                    <p style='font-size:10px; color:#9CA3AF;
-                              margin:0; font-weight:700;
-                              text-transform:uppercase;
-                              letter-spacing:1px;'>Location</p>
-                    <p style='font-size:14px; font-weight:600;
-                              color:#06B6D4; margin:8px 0 0 0;'>
-                        {info.get('location','Unknown')[:30]}
-                    </p>
-                </div>
-            </div>
+        st.markdown(f"""
+<div style='background:linear-gradient(135deg,#6C63FF15,#3B82F615);
+            border:2px solid #6C63FF30;
+            border-radius:16px; padding:28px;
+            margin-bottom:24px;'>
+    <div style='display:flex;
+                justify-content:space-between;
+                align-items:flex-start; flex-wrap:wrap;
+                gap:16px;'>
+        <div>
+            <span style='background:#6C63FF; color:white;
+                         font-size:11px; font-weight:700;
+                         padding:4px 14px;
+                         border-radius:20px;
+                         letter-spacing:1px;'>
+                ✅ PROTEIN LOADED
+            </span>
+            <h2 style='font-size:24px; font-weight:800;
+                       color:#1A1A2E;
+                       margin:12px 0 4px 0;'>
+                {protein_name}
+            </h2>
+            <p style='font-size:14px; color:#6B7280;
+                      margin:0; font-style:italic;'>
+                {organism}
+            </p>
         </div>
-        """), unsafe_allow_html=True)
+        <div style='text-align:right;'>
+            <p style='font-size:11px; color:#9CA3AF; margin:0;'>
+                UniProt ID
+            </p>
+            <p style='font-size:20px; font-weight:700;
+                      color:#6C63FF; margin:4px 0 0 0;
+                      font-family:monospace;'>
+                {uid}
+            </p>
+        </div>
+    </div>
+    <div style='display:flex; gap:40px;
+                flex-wrap:wrap; margin-top:20px;'>
+        <div>
+            <p style='font-size:10px; color:#9CA3AF;
+                      margin:0; font-weight:700;
+                      text-transform:uppercase;
+                      letter-spacing:1px;'>Gene</p>
+            <p style='font-size:24px; font-weight:700;
+                      color:#1A1A2E; margin:4px 0 0 0;'>
+                {gene}
+            </p>
+        </div>
+        <div>
+            <p style='font-size:10px; color:#9CA3AF;
+                      margin:0; font-weight:700;
+                      text-transform:uppercase;
+                      letter-spacing:1px;'>Length</p>
+            <p style='font-size:24px; font-weight:700;
+                      color:#3B82F6; margin:4px 0 0 0;'>
+                {length} aa
+            </p>
+        </div>
+        <div>
+            <p style='font-size:10px; color:#9CA3AF;
+                      margin:0; font-weight:700;
+                      text-transform:uppercase;
+                      letter-spacing:1px;'>Diseases</p>
+            <p style='font-size:24px; font-weight:700;
+                      color:#EF4444; margin:4px 0 0 0;'>
+                {num_diseases}
+            </p>
+        </div>
+        <div>
+            <p style='font-size:10px; color:#9CA3AF;
+                      margin:0; font-weight:700;
+                      text-transform:uppercase;
+                      letter-spacing:1px;'>Location</p>
+            <p style='font-size:14px; font-weight:600;
+                      color:#06B6D4; margin:8px 0 0 0;'>
+                {location}
+            </p>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
         # Biological Function
         st.markdown("### 🔬 Biological Function")
@@ -318,18 +323,18 @@ def show():
             borders = ["#EF4444","#F59E0B","#8B5CF6"]
             for i, disease in enumerate(diseases[:6]):
                 with [c1, c2, c3][i % 3]:
-                    st.markdown(textwrap.dedent(f"""
-                    <div style='background:{colors[i%3]};
-                                border-left:3px solid {borders[i%3]};
-                                border-radius:8px;
-                                padding:10px 14px;
-                                margin-bottom:8px;'>
-                        <p style='font-size:12px; font-weight:600;
-                                  color:#1A1A2E; margin:0;'>
-                            {disease[:55]}
-                        </p>
-                    </div>
-                    """), unsafe_allow_html=True)
+                    st.markdown(f"""
+<div style='background:{colors[i%3]};
+            border-left:3px solid {borders[i%3]};
+            border-radius:8px;
+            padding:10px 14px;
+            margin-bottom:8px;'>
+    <p style='font-size:12px; font-weight:600;
+              color:#1A1A2E; margin:0;'>
+        {disease[:55]}
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
         # Quick navigation
         st.markdown("---")
@@ -337,63 +342,63 @@ def show():
         c1, c2, c3, c4 = st.columns(4)
         with c1:
             st.markdown("""
-            <div style='background:white; border-radius:12px;
-                        padding:20px; text-align:center;
-                        box-shadow:0 2px 12px rgba(108,99,255,0.1);
-                        border-top:3px solid #6C63FF;'>
-                <div style='font-size:28px;'>🏗️</div>
-                <p style='font-weight:700; color:#1A1A2E;
-                          margin:8px 0 4px 0;'>Structure</p>
-                <p style='font-size:11px; color:#9CA3AF; margin:0;'>
-                    3D AlphaFold Viewer</p>
-            </div>
-            """, unsafe_allow_html=True)
+<div style='background:white; border-radius:12px;
+            padding:20px; text-align:center;
+            box-shadow:0 2px 12px rgba(108,99,255,0.1);
+            border-top:3px solid #6C63FF;'>
+    <div style='font-size:28px;'>🏗️</div>
+    <p style='font-weight:700; color:#1A1A2E;
+              margin:8px 0 4px 0;'>Structure</p>
+    <p style='font-size:11px; color:#9CA3AF; margin:0;'>
+        3D AlphaFold Viewer</p>
+</div>
+""", unsafe_allow_html=True)
         with c2:
             st.markdown("""
-            <div style='background:white; border-radius:12px;
-                        padding:20px; text-align:center;
-                        box-shadow:0 2px 12px rgba(59,130,246,0.1);
-                        border-top:3px solid #3B82F6;'>
-                <div style='font-size:28px;'>⚙️</div>
-                <p style='font-weight:700; color:#1A1A2E;
-                          margin:8px 0 4px 0;'>Function</p>
-                <p style='font-size:11px; color:#9CA3AF; margin:0;'>
-                    GO Terms · Disease Links</p>
-            </div>
-            """, unsafe_allow_html=True)
+<div style='background:white; border-radius:12px;
+            padding:20px; text-align:center;
+            box-shadow:0 2px 12px rgba(59,130,246,0.1);
+            border-top:3px solid #3B82F6;'>
+    <div style='font-size:28px;'>⚙️</div>
+    <p style='font-weight:700; color:#1A1A2E;
+              margin:8px 0 4px 0;'>Function</p>
+    <p style='font-size:11px; color:#9CA3AF; margin:0;'>
+        GO Terms · Disease Links</p>
+</div>
+""", unsafe_allow_html=True)
         with c3:
             st.markdown("""
-            <div style='background:white; border-radius:12px;
-                        padding:20px; text-align:center;
-                        box-shadow:0 2px 12px rgba(6,182,212,0.1);
-                        border-top:3px solid #06B6D4;'>
-                <div style='font-size:28px;'>💊</div>
-                <p style='font-weight:700; color:#1A1A2E;
-                          margin:8px 0 4px 0;'>Drugs</p>
-                <p style='font-size:11px; color:#9CA3AF; margin:0;'>
-                    Clinical Pipeline</p>
-            </div>
-            """, unsafe_allow_html=True)
+<div style='background:white; border-radius:12px;
+            padding:20px; text-align:center;
+            box-shadow:0 2px 12px rgba(6,182,212,0.1);
+            border-top:3px solid #06B6D4;'>
+    <div style='font-size:28px;'>💊</div>
+    <p style='font-weight:700; color:#1A1A2E;
+              margin:8px 0 4px 0;'>Drugs</p>
+    <p style='font-size:11px; color:#9CA3AF; margin:0;'>
+        Clinical Pipeline</p>
+</div>
+""", unsafe_allow_html=True)
         with c4:
-            st.markdown(textwrap.dedent("""
-            <div style='background:white; border-radius:12px;
-                        padding:20px; text-align:center;
-                        box-shadow:0 2px 12px rgba(139,92,246,0.1);
-                        border-top:3px solid #8B5CF6;'>
-                <div style='font-size:28px;'>🔗</div>
-                <p style='font-weight:700; color:#1A1A2E;
-                          margin:8px 0 4px 0;'>Similar</p>
-                <p style='font-size:11px; color:#9CA3AF; margin:0;'>
-                    Related Proteins</p>
-            </div>
-            """), unsafe_allow_html=True)
+            st.markdown("""
+<div style='background:white; border-radius:12px;
+            padding:20px; text-align:center;
+            box-shadow:0 2px 12px rgba(139,92,246,0.1);
+            border-top:3px solid #8B5CF6;'>
+    <div style='font-size:28px;'>🔗</div>
+    <p style='font-weight:700; color:#1A1A2E;
+              margin:8px 0 4px 0;'>Similar</p>
+    <p style='font-size:11px; color:#9CA3AF; margin:0;'>
+        Related Proteins</p>
+</div>
+""", unsafe_allow_html=True)
 
         st.markdown("""
-        <p style='font-size:12px; color:#9CA3AF;
-                  text-align:center; margin-top:12px;'>
-            👈 Use the sidebar navigation to switch between pages
-        </p>
-        """, unsafe_allow_html=True)
+<p style='font-size:12px; color:#9CA3AF;
+          text-align:center; margin-top:12px;'>
+    👈 Use the sidebar navigation to switch between pages
+</p>
+""", unsafe_allow_html=True)
 
     else:
         # Feature overview when no protein loaded
@@ -415,25 +420,25 @@ def show():
         c1, c2 = st.columns(2)
         for i, (icon, title, desc, color) in enumerate(features):
             with (c1 if i % 2 == 0 else c2):
-                st.markdown(textwrap.dedent(f"""
-                <div style='background:white;
-                            border-radius:12px;
-                            padding:24px;
-                            margin-bottom:16px;
-                            box-shadow:0 2px 12px rgba(0,0,0,0.05);
-                            border-top:3px solid {color};'>
-                    <div style='font-size:32px;
-                                margin-bottom:10px;'>{icon}</div>
-                    <h4 style='font-size:16px; font-weight:700;
-                                color:#1A1A2E; margin:0 0 8px 0;'>
-                        {title}
-                    </h4>
-                    <p style='font-size:13px; color:#6B7280;
-                              margin:0; line-height:1.6;'>
-                        {desc}
-                    </p>
-                </div>
-                """), unsafe_allow_html=True)
+                st.markdown(f"""
+<div style='background:white;
+            border-radius:12px;
+            padding:24px;
+            margin-bottom:16px;
+            box-shadow:0 2px 12px rgba(0,0,0,0.05);
+            border-top:3px solid {color};'>
+    <div style='font-size:32px;
+                margin-bottom:10px;'>{icon}</div>
+    <h4 style='font-size:16px; font-weight:700;
+               color:#1A1A2E; margin:0 0 8px 0;'>
+        {title}
+    </h4>
+    <p style='font-size:13px; color:#6B7280;
+              margin:0; line-height:1.6;'>
+        {desc}
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
     # ── Footer ────────────────────────────────────────────────────
     st.markdown("---")
