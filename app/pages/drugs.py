@@ -83,116 +83,90 @@ def show():
 
     st.markdown("<br/>", unsafe_allow_html=True)
 
-    # ── Bento Grid Drug Cards ────────────────────────────────────
-    st.markdown("""
-    <p style="
-        font-family:'Space Grotesk',sans-serif;
-        font-size:9px; letter-spacing:0.2em;
-        color:rgba(197,197,213,0.4);
-        text-transform:uppercase;
-        margin:0 0 14px 0;
-    ">Drug Phase Cards</p>
-    """, unsafe_allow_html=True)
+    st.divider()
 
-    # Show top 6 drugs as bento cards
-    top_drugs = drugs[:6]
-    for i in range(0, len(top_drugs), 3):
-        row = top_drugs[i:i+3]
-        cols = st.columns(len(row))
-        for col, drug in zip(cols, row):
-            with col:
-                phase_num = drug.get("Phase Number", -1)
-                style     = PHASE_STYLES.get(phase_num, PHASE_STYLES[-1])
-                color     = style["color"]
-                bg        = style["bg"]
-                label     = style["label"]
-                # molecule_name is not returned by drug_indication endpoint;
-                # fall back to ChEMBL ID as the display name
-                chembl_id = drug.get("ChEMBL ID", "N/A")
-                raw_name  = drug.get("Drug Name") or chembl_id
-                name      = str(raw_name)[:22]
-                raw_ind   = drug.get("Indication", "N/A")
-                ind       = str(raw_ind)[:55] if raw_ind and raw_ind != "N/A" else "Indication data not available"
-                phase_display = str(phase_num) if phase_num >= 0 else "N/A"
-                if phase_num == 4:
-                    status = "APPROVED"
-                elif phase_num >= 1:
-                    status = "ONGOING"
-                else:
-                    status = "PRECLINICAL"
-
-                card_html = (
-                    f'<div style="background:{bg}; border:1px solid {color}40;'
-                    f' border-radius:10px; padding:20px; margin-bottom:4px;">'
-                    f'<div style="display:flex; justify-content:space-between;'
-                    f' align-items:center; margin-bottom:14px;">'
-                    f'<span style="background:{bg}; border:1px solid {color}60;'
-                    f' padding:4px 10px; font-size:9px; font-weight:700;'
-                    f' color:{color}; border-radius:4px; letter-spacing:0.08em;">'
-                    f'{label}</span>'
-                    f'<span style="font-size:8px; color:rgba(197,197,213,0.3);'
-                    f' letter-spacing:0.15em;">{chembl_id[:12]}</span>'
-                    f'</div>'
-                    f'<h4 style="font-size:15px; font-weight:600; color:#ffffff;'
-                    f' margin:0 0 8px 0;">{name}</h4>'
-                    f'<p style="font-size:11px; color:rgba(197,197,213,0.55);'
-                    f' margin:0 0 16px 0; line-height:1.5;">{ind}</p>'
-                    f'<div style="border-top:1px solid rgba(255,255,255,0.05);'
-                    f' padding-top:12px; display:flex; justify-content:space-between;">'
-                    f'<div><p style="font-size:8px; text-transform:uppercase;'
-                    f' color:rgba(197,197,213,0.35); margin:0;">Phase</p>'
-                    f'<p style="font-size:14px; color:{color};'
-                    f' margin:2px 0 0 0; font-weight:700;">{phase_display}</p></div>'
-                    f'<div style="text-align:right;">'
-                    f'<p style="font-size:8px; text-transform:uppercase;'
-                    f' color:rgba(197,197,213,0.35); margin:0;">Status</p>'
-                    f'<p style="font-size:11px; color:{color}; margin:2px 0 0 0;">'
-                    f'{status}</p></div></div></div>'
-                )
-                st.markdown(card_html, unsafe_allow_html=True)
-
-    st.markdown("<br/>", unsafe_allow_html=True)
-
-    # ── Pipeline Chart ───────────────────────────────────────────
-    st.markdown("""
-    <p style="
-        font-family:'Space Grotesk',sans-serif;
-        font-size:9px; letter-spacing:0.2em;
-        color:rgba(197,197,213,0.4);
-        text-transform:uppercase;
-        margin:0 0 12px 0;
-    ">Binding Affinity · Phase Distribution</p>
-    """, unsafe_allow_html=True)
+    st.markdown("#### 📊 Clinical Pipeline Overview")
 
     phase_counts = (
         df.groupby("Phase").size()
           .reset_index(name="Count")
     )
-    fig = px.bar(
-        phase_counts, x="Phase", y="Count",
-        color="Phase",
-        color_discrete_sequence=[
-            "#00dce6","#b9c3ff","#667eea","#ffb3b2","#888","#f64f59"
-        ],
-        title=None
-    )
-    fig.update_layout(
-        showlegend=False,
-        height=280,
-        paper_bgcolor="rgba(10,12,26,0)",
-        plot_bgcolor="rgba(10,12,26,0.4)",
-        font=dict(family="Space Grotesk", color="#e1e1f6", size=11),
-        xaxis=dict(
-            gridcolor="rgba(255,255,255,0.05)",
-            title=None
-        ),
-        yaxis=dict(
-            gridcolor="rgba(255,255,255,0.05)",
-            title="Count"
-        ),
-        margin=dict(l=40, r=20, t=10, b=40)
-    )
-    st.plotly_chart(fig, use_container_width=True)
+
+    # Colour map aligned to phase labels
+    PHASE_COLORS = {
+        "✅ Approved"    : "#00dce6",
+        "🔬 Phase 3"    : "#b9c3ff",
+        "🧪 Phase 2"    : "#667eea",
+        "🔭 Phase 1"    : "#ffb3b2",
+        "💡 Preclinical": "#888888",
+        "❌ Discontinued": "#f64f59",
+    }
+    colors = [
+        PHASE_COLORS.get(p, "#aaaaaa")
+        for p in phase_counts["Phase"]
+    ]
+
+    chart_col1, chart_col2 = st.columns(2)
+
+    # ── Donut: phase distribution ─────────────────────────────
+    with chart_col1:
+        st.markdown("**Phase Distribution**")
+        donut = px.pie(
+            phase_counts,
+            names="Phase",
+            values="Count",
+            hole=0.55,
+            color="Phase",
+            color_discrete_map=PHASE_COLORS,
+        )
+        donut.update_traces(
+            textinfo="percent+label",
+            textfont_size=11,
+            marker=dict(line=dict(color="#0a0c1a", width=2)),
+        )
+        donut.update_layout(
+            showlegend=False,
+            height=300,
+            margin=dict(l=10, r=10, t=10, b=10),
+            paper_bgcolor="rgba(0,0,0,0)",
+            font=dict(color="#e1e1f6", size=11),
+        )
+        st.plotly_chart(donut, use_container_width=True)
+
+    # ── Horizontal bar: top indications ──────────────────────
+    with chart_col2:
+        st.markdown("**Top Indications**")
+        ind_counts = (
+            df[df["Indication"] != "N/A"]
+            .groupby("Indication")
+            .size()
+            .reset_index(name="Count")
+            .sort_values("Count", ascending=True)
+            .tail(8)
+        )
+        if not ind_counts.empty:
+            hbar = px.bar(
+                ind_counts,
+                x="Count",
+                y="Indication",
+                orientation="h",
+                color="Count",
+                color_continuous_scale=["#667eea", "#00dce6"],
+            )
+            hbar.update_layout(
+                showlegend=False,
+                coloraxis_showscale=False,
+                height=300,
+                margin=dict(l=10, r=10, t=10, b=10),
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(255,255,255,0.03)",
+                font=dict(color="#e1e1f6", size=10),
+                xaxis=dict(gridcolor="rgba(255,255,255,0.06)", title="Drug Count"),
+                yaxis=dict(gridcolor="rgba(0,0,0,0)", title=None),
+            )
+            st.plotly_chart(hbar, use_container_width=True)
+        else:
+            st.info("No indication data available.")
 
     # ── Full Table ───────────────────────────────────────────────
     st.markdown("""

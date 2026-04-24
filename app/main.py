@@ -29,14 +29,29 @@ st.markdown("""
             #6C63FF 0%, #3B82F6 60%, #06B6D4 100%) !important;
     }
     [data-testid="stSidebar"] * { color: white !important; }
-    [data-testid="stSidebar"] .stTextInput input {
-        background: rgba(255,255,255,0.15) !important;
-        border: 1px solid rgba(255,255,255,0.4) !important;
+    [data-testid="stSidebar"] .stTextInput input,
+    [data-testid="stSidebar"] .stTextInput input:focus,
+    [data-testid="stSidebar"] .stTextInput input:active,
+    [data-testid="stSidebar"] .stTextInput input:hover {
+        background: rgba(255,255,255,0.18) !important;
+        border: 1px solid rgba(255,255,255,0.5) !important;
         border-radius: 8px !important;
         color: white !important;
+        -webkit-text-fill-color: white !important;
+        caret-color: white !important;
+        box-shadow: none !important;
+        outline: none !important;
     }
     [data-testid="stSidebar"] .stTextInput input::placeholder {
         color: rgba(255,255,255,0.6) !important;
+    }
+    /* Prevent browser autofill white-box override */
+    [data-testid="stSidebar"] .stTextInput input:-webkit-autofill,
+    [data-testid="stSidebar"] .stTextInput input:-webkit-autofill:hover,
+    [data-testid="stSidebar"] .stTextInput input:-webkit-autofill:focus {
+        -webkit-text-fill-color: white !important;
+        -webkit-box-shadow: 0 0 0px 1000px rgba(80,60,220,0.7) inset !important;
+        caret-color: white !important;
     }
     [data-testid="stSidebar"] .stSelectbox > div > div {
         background: rgba(255,255,255,0.15) !important;
@@ -172,6 +187,42 @@ st.markdown("""
     /* Caption */
     .stCaption { color: #6B7280 !important; }
 </style>
+""", unsafe_allow_html=True)
+
+# Disable browser autocomplete on sidebar inputs (prevents white dropdown over purple sidebar)
+st.markdown("""
+<script>
+(function() {
+    function disableAutocomplete() {
+        var inputs = document.querySelectorAll(
+            '[data-testid="stSidebar"] input[type="text"]'
+        );
+        inputs.forEach(function(inp) {
+            inp.setAttribute('autocomplete', 'off');
+            inp.setAttribute('autocorrect', 'off');
+            inp.setAttribute('autocapitalize', 'none');
+            inp.setAttribute('spellcheck', 'false');
+
+            // Force styles directly on the element (inline = highest specificity)
+            function applyStyles() {
+                inp.style.setProperty('background', 'rgba(255,255,255,0.18)', 'important');
+                inp.style.setProperty('color', 'white', 'important');
+                inp.style.setProperty('-webkit-text-fill-color', 'white', 'important');
+                inp.style.setProperty('caret-color', 'white', 'important');
+                inp.style.setProperty('box-shadow', 'none', 'important');
+            }
+            applyStyles();
+            inp.addEventListener('focus',  applyStyles);
+            inp.addEventListener('blur',   applyStyles);
+            inp.addEventListener('input',  applyStyles);
+            inp.addEventListener('click',  applyStyles);
+        });
+    }
+    var observer = new MutationObserver(disableAutocomplete);
+    observer.observe(document.body, { childList: true, subtree: true });
+    disableAutocomplete();
+})();
+</script>
 """, unsafe_allow_html=True)
 
 # ── Session State ───────────────────────────────────────────────
