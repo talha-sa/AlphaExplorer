@@ -26,7 +26,7 @@ def show():
                 font-family:'Space Grotesk',sans-serif;
                 font-size:36px; font-weight:600;
                 letter-spacing:-0.02em; color:#ffffff; margin:0;
-            ">Discovery Canvas</h1>
+            ">Structure Viewer</h1>
         </div>
         <div style="text-align:right;">
             <p style="font-size:9px; text-transform:uppercase;
