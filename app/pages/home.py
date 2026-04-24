@@ -1,13 +1,14 @@
 # AlphaExplorer - Home Page with Central Search Bar
 
 import streamlit as st
+import textwrap
 
 def show():
     uid  = st.session_state.get("uniprot_id")
     info = st.session_state.get("protein_info", {})
 
     # ── Hero Header ──────────────────────────────────────────────
-    st.markdown("""
+    st.markdown(textwrap.dedent("""
     <div style='padding:10px 0 24px 0;'>
         <h1 style='font-size:42px; font-weight:800;
                    color:#1A1A2E; margin:0; line-height:1.2;'>
@@ -22,7 +23,7 @@ def show():
             </span>
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """), unsafe_allow_html=True)
 
     # ── Stats Row ─────────────────────────────────────────────────
     col1, col2, col3, col4 = st.columns(4)
@@ -214,7 +215,7 @@ def show():
 
     # ── Active Protein Card ───────────────────────────────────────
     if uid:
-        st.markdown(f"""
+        st.markdown(textwrap.dedent(f"""
         <div style='background:linear-gradient(
                         135deg,#6C63FF15,#3B82F615);
                     border:2px solid #6C63FF30;
@@ -298,7 +299,7 @@ def show():
                 </div>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
 
         # Biological Function
         st.markdown("### 🔬 Biological Function")
@@ -317,7 +318,7 @@ def show():
             borders = ["#EF4444","#F59E0B","#8B5CF6"]
             for i, disease in enumerate(diseases[:6]):
                 with [c1, c2, c3][i % 3]:
-                    st.markdown(f"""
+                    st.markdown(textwrap.dedent(f"""
                     <div style='background:{colors[i%3]};
                                 border-left:3px solid {borders[i%3]};
                                 border-radius:8px;
@@ -328,7 +329,7 @@ def show():
                             {disease[:55]}
                         </p>
                     </div>
-                    """, unsafe_allow_html=True)
+                    """), unsafe_allow_html=True)
 
         # Quick navigation
         st.markdown("---")
@@ -374,7 +375,7 @@ def show():
             </div>
             """, unsafe_allow_html=True)
         with c4:
-            st.markdown("""
+            st.markdown(textwrap.dedent("""
             <div style='background:white; border-radius:12px;
                         padding:20px; text-align:center;
                         box-shadow:0 2px 12px rgba(139,92,246,0.1);
@@ -385,7 +386,7 @@ def show():
                 <p style='font-size:11px; color:#9CA3AF; margin:0;'>
                     Related Proteins</p>
             </div>
-            """, unsafe_allow_html=True)
+            """), unsafe_allow_html=True)
 
         st.markdown("""
         <p style='font-size:12px; color:#9CA3AF;
@@ -414,7 +415,7 @@ def show():
         c1, c2 = st.columns(2)
         for i, (icon, title, desc, color) in enumerate(features):
             with (c1 if i % 2 == 0 else c2):
-                st.markdown(f"""
+                st.markdown(textwrap.dedent(f"""
                 <div style='background:white;
                             border-radius:12px;
                             padding:24px;
@@ -424,7 +425,7 @@ def show():
                     <div style='font-size:32px;
                                 margin-bottom:10px;'>{icon}</div>
                     <h4 style='font-size:16px; font-weight:700;
-                               color:#1A1A2E; margin:0 0 8px 0;'>
+                                color:#1A1A2E; margin:0 0 8px 0;'>
                         {title}
                     </h4>
                     <p style='font-size:13px; color:#6B7280;
@@ -432,7 +433,7 @@ def show():
                         {desc}
                     </p>
                 </div>
-                """, unsafe_allow_html=True)
+                """), unsafe_allow_html=True)
 
     # ── Footer ────────────────────────────────────────────────────
     st.markdown("---")
